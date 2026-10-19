@@ -1,0 +1,14 @@
+﻿@model TestNalog.Models.Employee
+
+<h1> Информация о сотруднике</h1>
+
+<div>
+    <p>Id: @Model.Id</p>
+    <p>ФИО: @Model.FullName</p>
+    <p>Департамент: @Model.Department</p>
+    <p>Телефон: @Model.Phone</p>
+    <p>Запросы: @Model.Requests</p>
+</div>
+
+<a asp-action="Index">Назад к списку сотрудников</a>
+<a asp-action="Edit" asp-route-id="@Model.Id">Редактировать</a>

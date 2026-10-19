@@ -1,0 +1,15 @@
+﻿@model TestNalog.Models.Employee
+
+<h1>Удаление сотрудника</h1>
+
+<h3>Вы уверены, что хотите удалить этого сотрудника?</h3>
+<div>
+    <p>ФИО: @Model.FullName</p>
+    <p>Департамент: @Model.Department</p>
+    <p>Телефон: @Model.Phone</p>
+</div>
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit">Удалить</button>
+    <a asp-action="Index">Отмена</a>
+</form>

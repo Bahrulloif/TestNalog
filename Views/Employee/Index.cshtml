@@ -1,0 +1,38 @@
+﻿@model IEnumerable<TestNalog.Models.Employee>
+
+<h1>Сотрудники</h1>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>ФИО</th>
+            <th>Департамент</th>
+            <th>Телефон</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (Employee employee in Model)
+        {
+            <tr>
+                <td>@employee.Id</td>
+                <td>@employee.FullName</td>
+                <td>@employee.Department</td>
+                <td>@employee.Phone</td>
+                <td>
+                    <a asp-action="Detail" asp-route-id="@employee.Id">
+                        Подробнее
+                    </a> |
+                    <a asp-action="Edit" asp-route-id="@employee.Id">
+                        Изменить
+                    </a> |
+                    <a asp-action="Delete" asp-route-id="@employee.Id">
+                        Удалить
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
