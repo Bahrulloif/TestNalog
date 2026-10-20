@@ -186,3 +186,4 @@
 /home/admin/workspace/TestNalog/TestNalog/obj/Debug/net10.0/ref/TestNalog.dll
 /home/admin/workspace/TestNalog/TestNalog/bin/Debug/net10.0/Npgsql.dll
 /home/admin/workspace/TestNalog/TestNalog/bin/Debug/net10.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll
+/home/admin/workspace/TestNalog/TestNalog/obj/Debug/net10.0/TestNalog.sourcelink.json

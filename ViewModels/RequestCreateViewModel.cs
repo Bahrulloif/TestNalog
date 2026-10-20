@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using TestNalog.Data;
 using TestNalog.Enums;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -53,5 +52,5 @@ public class RequestCreateViewModel
     [EnumDataType(typeof(RequestPriority))]
     public RequestPriority Priority { get; set; } = RequestPriority.Medium; //Приоритет заявки, enum
 
-    public IEnumerable<SelectListItem> Employees = new List<SelectListItem>();
+    public IEnumerable<SelectListItem> Employees { get; set; } = new List<SelectListItem>();
 }
