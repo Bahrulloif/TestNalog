@@ -18,8 +18,10 @@ public class RequestsController : Controller
 
     private async Task FillEmployees(RequestCreateViewModel model)
     {
-        model.Employees = await _context.Employees.OrderBy(e => e.FullName).
-        Select(e => new SelectListItem { Value = e.Id.ToString(), Text = e.FullName }).ToListAsync();
+        model.Employees = await _context
+        .Employees.OrderBy(e => e.FullName).
+        Select(e => new SelectListItem { Value = e.Id.ToString(), Text = e.FullName })
+        .ToListAsync();
 
     }
     public async Task<ActionResult> Index()
@@ -78,12 +80,91 @@ public class RequestsController : Controller
         await _context.SaveChangesAsync();
         return RedirectToAction(nameof(Index));
     }
-    // public async Task<ActionResult> Detail(int? id)
-    // {
-    //     if (id == null)
-    //     {
-    //         return NotFound();
-    //     }
+    public async Task<ActionResult> Detail(int? id)
+    {
+        if (id == null || id <= 0)
+        {
+            return NotFound();
+        }
+        var request = await _context.Requests
+        .Include(e => e.Employee)
+        .FirstOrDefaultAsync(r => r.Id == id);
+        if (request == null)
+        {
+            return NotFound();
+        }
+        else
+        {
+            return View(request);
+        }
 
-    // }
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Edit(int? id)
+    {
+        if (id == null || id <= 0)
+        {
+            return NotFound();
+        }
+        var request = await _context.Requests.FirstOrDefaultAsync(r => r.Id == id);
+        if (request == null)
+        {
+            return NotFound();
+        }
+        else
+        {
+            var model = new RequestCreateViewModel
+            {
+                Title = request.Title,
+                Description = request.Description,
+                Priority = request.Priority,
+                EmployeeId = request.EmployeeId
+            };
+            return View(model);
+        }
+    }
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(int id, RequestCreateViewModel model)
+    {
+        if (id <= 0)
+        {
+            return NotFound();
+        }
+        var request = await _context.Requests.FirstOrDefaultAsync(r => r.Id == id);
+        if (request == null)
+        {
+            return NotFound();
+        }
+        if (request.Status == RequestStatus.Cancelled || request.Status == RequestStatus.Completed)
+        {
+            return BadRequest("Эту заявку нельзя изменить");
+        }
+        if (!Enum.IsDefined(typeof(RequestPriority), model.Priority))
+        {
+            ModelState.AddModelError(
+                nameof(model.Priority),
+                "Выбран недопустимый приоритет.");
+        }
+        var employeeExists = await _context.Employees
+        .AnyAsync(e => e.Id == model.EmployeeId);
+
+        if (employeeExists == false)
+        {
+            ModelState.AddModelError(nameof(model.EmployeeId), "Выбранный сотрудник не найден.");
+
+            await FillEmployees(model);
+            return View(model);
+        }
+
+        request.Title = model.Title;
+        request.Description = model.Description;
+        request.EmployeeId = model.EmployeeId;
+        request.Priority = model.Priority;
+
+        await _context.SaveChangesAsync();
+        return RedirectToAction(nameof(Index));
+    }
+
 }
